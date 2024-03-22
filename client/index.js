@@ -7,9 +7,10 @@ $(document).ready(function() {
         paging: true,
         serverSide: true,
         searching: true,
-        processing: true,
+        processing: true, //lade-symbol beim warten auf get request
+        scrollY: 700,
         ajax: {
-            url: "http://localhost:8080/api/data",
+            url: "/api/data",
             dataSrc: "aaData"
         },
         aaSorting: [],
@@ -34,26 +35,26 @@ $(document).ready(function() {
     })
 
 
-    $("#user_table").focusout(function(){
-        if($('.dyn-input').length && blockEditing){
-            $('.dyn-input').parent().replaceWith(tmpElement)
-            blockEditing = false
-        }
-    })
-
-
     $('main').on('keypress', function(e) {
         if(e.keyCode == 13 && $('.dyn-input').val() != '' &&  tmpElement != null){
             editedText = $('.dyn-input').val()
             submitChange(editedText, tmpElement)
             $('.dyn-input').parent().replaceWith(tmpElement)
-            console.log(editedText)
+            console.log("enter replaced")
             $(tmpElement).text(editedText)
-            //table.ajax.reload()
             blockEditing = false
         }else if(e.keyCode == 13){
             $('.dyn-input').parent().replaceWith(tmpElement)
+            console.log("empty replaced")
             blockEditing = false
+        }
+    })
+
+    $("#user_table").on("focusout", function(){
+        if($('.dyn-input').length && $('.dyn-input').parent().length && blockEditing){
+            //$("main").trigger("keypress")
+            //console.log("trigger keypress")
+            //blockEditing = false
         }
     })
 
@@ -65,7 +66,6 @@ $(document).ready(function() {
         let data = table.cell(oldElement).rows().data()[rowIndex]
         data.changedText = newText
         data.changedCol = colName
-        console.log(data)
 
         $.ajax({
             type: "POST",
