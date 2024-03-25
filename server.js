@@ -98,9 +98,9 @@ app.get('/api/data', function(req, res) {
                     'iTotalRecords' : total_records,
                     'iTotalDisplayRecords' : total_records_with_filter,
                     'aaData' : data_arr
-                };
+                }
     
-                res.json(output);
+                res.json(output)
             })
         })
     })

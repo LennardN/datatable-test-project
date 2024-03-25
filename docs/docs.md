@@ -75,14 +75,14 @@ const db = require("./database") // Einbindung des Scripts zur Database anbindun
 const app = express();
 const port = 8080;
 
-app.use(express.static(path.join(__dirname, 'client-dir'))) //Setzt als Standard Route das Client directory
+app.use(express.static(path.join(__dirname, 'client-dir'))) // Setzt Client directory als Standard Route
 app.use(express.urlencoded({ extended: false })); // Middleware für POST-Requests
 
 ...
 
 app.listen(port)
 ```
-## API Routes und Beispiel der Spaltensortierung
+## API Routes
 ```JavaScript
 app.get('/api/data', function(req, res) {
 
@@ -95,21 +95,29 @@ app.get('/api/data', function(req, res) {
         res.json(processed_data);
     })
 })
-
 ```
+## Zugriff auf Request Parameter Beispiel
+Anhand von der [Decoded Query URL](#decoded-query) der Request auslesbar
+```JavaScript
+    var start = req.query.start;
+    var length = req.query.length;
+    var column_index = req.query.order[0]['column']
+    var column_name = req.query.columns[column_index]['data']
+```
+
 ## Beispiel DB Queries
 ```SQL
 SELECT COUNT(*) AS Total FROM users 
 WHERE 1 AND
 
-    SELECT * FROM users         -- Query für nach Spalten sortierte Datensätze
+    SELECT * FROM users     -- Query für nach Spalten sortierte Datensätze
     WHERE 1 AND
 
-        name LIKE search_value          -- Search Query
-        OR position LIKE search_value
+        name LIKE "search_value"      -- Search Query
+        OR "position" LIKE "search_value"
 
-    ORDER BY column_name column_sort_order 
-    LIMIT start, length
+    ORDER BY "column_name" "column_sort_order" 
+    LIMIT "start", "length";
 ```
 ## Rückgabe
 Werte können dann in einem JavaScript Object gespeichert werden und dann in Form des [JSON Objects](#json-response) als Response gesendet werden.
