@@ -1,6 +1,6 @@
 # Documentation für DataTables
 
-## Einzubindene Libraries
+### Einzubindene Libraries
 ```
 https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css
 https://code.jquery.com/jquery-3.5.1.js
@@ -17,7 +17,7 @@ const table = $('#html-table-id').DataTable({
         options...
 })
 ```
-## Häufig verwendete Options
+### Häufig verwendete Options
 | Option: DataType | Rückgabewert | Funktion |
 |---|---|---|
 | serverSide: | Bool | Schaltet das dynamische Anfragen von Datensetzen ein bzw. aus
@@ -29,7 +29,7 @@ const table = $('#html-table-id').DataTable({
 | ajax: | Object | Setzt Parameter für ajax Calls um Datensätze zu erhalten |
 | columns: | Array | Legt die Angezeigten Columns fest. Der *data* Parameter gibt internen Namen an und der *name* Parameter die angezeigten Namen |
 [Alle Options](https://www.datatables.net/reference/option/)
-## AJAX Option
+### AJAX Option
 ```JavaScript
 ajax: {
         url: "localhost:8080/api/data", // Route
@@ -96,15 +96,14 @@ app.get('/api/data', function(req, res) {
     })
 })
 ```
-## Zugriff auf Request Parameter Beispiel
+### Zugriff auf Request Parameter Beispiel
 Anhand von der [Decoded Query URL](#decoded-query) der Request auslesbar
 ```JavaScript
-    var start = req.query.start;
-    var length = req.query.length;
-    var column_index = req.query.order[0]['column']
-    var column_name = req.query.columns[column_index]['data']
+    var start = request.query.start;
+    var length = request.query.length;
+    var column_index = request.query.order[0]['column']
+    var column_name = request.query.columns[column_index]['data']
 ```
-
 ## Beispiel DB Queries
 ```SQL
 SELECT COUNT(*) AS Total FROM users 
@@ -113,12 +112,12 @@ WHERE 1 AND
     SELECT * FROM users     -- Query für nach Spalten sortierte Datensätze
     WHERE 1 AND
 
-        name LIKE "search_value"      -- Search Query
+        "name" LIKE "search_value"      -- Suchleisten Query
         OR "position" LIKE "search_value"
 
     ORDER BY "column_name" "column_sort_order" 
     LIMIT "start", "length";
 ```
-## Rückgabe
+### Rückgabe
 Werte können dann in einem JavaScript Object gespeichert werden und dann in Form des [JSON Objects](#json-response) als Response gesendet werden.
 DataTables rendert diese dann automatisch auf das DOM.

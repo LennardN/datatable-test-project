@@ -1,7 +1,5 @@
 const express = require('express');
 const path = require('path');
-//const fs = require('fs');
-//const obj = JSON.parse(fs.readFileSync('./data.json', 'utf8'));
 const db = require("./database")
 
 const app = express();
@@ -85,19 +83,19 @@ app.get('/api/data', function(req, res) {
             db.query(query, function(error, data){
                 data.forEach((row) => {
                     data_arr.push({
-                        'name' : row.name,
-                        'position' : row.position,
-                        'office' : row.office,
-                        'extn' : row.extn,
-                        'start_date' : row.start_date,
-                        'salary' : row.salary
+                        'name': row.name,
+                        'position': row.position,
+                        'office': row.office,
+                        'extn': row.extn,
+                        'start_date': row.start_date,
+                        'salary': row.salary
                     })
                 })
                 var output = {
-                    'draw' : draw,
-                    'iTotalRecords' : total_records,
-                    'iTotalDisplayRecords' : total_records_with_filter,
-                    'aaData' : data_arr
+                    'draw': draw,
+                    'iTotalRecords': total_records,
+                    'iTotalDisplayRecords': total_records_with_filter,
+                    'aaData': data_arr
                 }
     
                 res.json(output)
