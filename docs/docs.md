@@ -8,7 +8,7 @@ https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css
 https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.min.css
 https://cdn.datatables.net/2.0.2/js/dataTables.min.js
 ```
-Unter [DataTable Downloads](https://datatables.net/download/) auch direkt konfigurierbar. Zum einfachen einfügen in das HTML-Dokument
+Unter [DataTable Downloads](https://datatables.net/download/) auch direkt konfigurierbar.
 
 ## Initialisierung eines DataTables
 ```JavaScript
@@ -18,16 +18,16 @@ const table = $('#html-table-id').DataTable({
 })
 ```
 ## Häufig verwendete Options
-| Option: DataType | Funktion |
-|---|---|
-| serverSide: Bool | Schaltet das dynamische Anfragen von Datensetzen ein bzw. aus
-| searching: Bool | Anzeigen der Suchleiste  |
-| paging: Bool | Zeigt Dropdown für Anzahl der zuanzeigenden Rows und Buttons zum Seitenwechsel |
-| processing: Bool | Lade-Symbol für das warten auf GET-Requests |
-| aaSorting: Array | Möglichkeit für Multi-Column Default Sortierung |
-| scrollY / scrollX: Int | setzt Scrolling direkt auf *True* und setzt Scroll-Window Größe |
-| ajax: Object | Setzt Parameter für ajax Calls um Datensätze zu erhalten |
-| columns: Array | Legt die Angezeigten Columns fest. Der *data* Parameter gibt internen Namen an und der *name* Parameter die angezeigten Namen |
+| Option: DataType | Rückgabewert | Funktion |
+|---|---|---|
+| serverSide: | Bool | Schaltet das dynamische Anfragen von Datensetzen ein bzw. aus
+| searching: | Bool | Anzeigen der Suchleiste  |
+| paging: | Bool | Zeigt Dropdown für Anzahl der zuanzeigenden Rows und Buttons zum Seitenwechsel |
+| processing: | Bool | Lade-Symbol für das warten auf GET-Requests |
+| aaSorting: | Array | Möglichkeit für Multi-Column Default Sortierung |
+| scrollY / scrollX: | Int | setzt Scrolling direkt auf *True* und setzt Scroll-Window Größe |
+| ajax: | Object | Setzt Parameter für ajax Calls um Datensätze zu erhalten |
+| columns: | Array | Legt die Angezeigten Columns fest. Der *data* Parameter gibt internen Namen an und der *name* Parameter die angezeigten Namen |
 [Alle Options](https://www.datatables.net/reference/option/)
 ## AJAX Option
 ```JavaScript
@@ -82,32 +82,35 @@ app.use(express.urlencoded({ extended: false })); // Middleware für POST-Reques
 
 app.listen(port)
 ```
-## API Routes
+## API Routes und Beispiel der Spaltensortierung
 ```JavaScript
 app.get('/api/data', function(req, res) {
 
-    // Auslesen der in der Query vorhandenen Parameter
-    var draw = req.query.draw; 
-    var start = req.query.start;
-    var length = req.query.length;
     ...
 
-    // Zusammensetzten der Search Query
-    var search_query = `
-        AND (name LIKE '%${search_value}%' 
-        OR position LIKE '%${search_value}%')`
-    
-    var query = `
-        SELECT * FROM users 
-        WHERE 1 ${search_query} 
-        ORDER BY ${column_name} ${column_sort_order} 
-        LIMIT ${start}, ${length}`;
-
-    db.query(`SELECT COUNT(*) AS Total FROM users WHERE 1 ${search_query}`, function(error, data){
+    db.query(query, function(error, data){
 
         ...
-        // Speichern von allen Rows, die auf die Query zutreffen
-        res.json(data);
+
+        res.json(processed_data);
     })
+})
 
 ```
+## Beispiel DB Queries
+```SQL
+SELECT COUNT(*) AS Total FROM users 
+WHERE 1 AND
+
+    SELECT * FROM users         -- Query für nach Spalten sortierte Datensätze
+    WHERE 1 AND
+
+        name LIKE search_value          -- Search Query
+        OR position LIKE search_value
+
+    ORDER BY column_name column_sort_order 
+    LIMIT start, length
+```
+## Rückgabe
+Werte können dann in einem JavaScript Object gespeichert werden und dann in Form des [JSON Objects](#json-response) als Response gesendet werden.
+DataTables rendert diese dann automatisch auf das DOM.
