@@ -40,12 +40,10 @@ $(document).ready(function() {
             editedText = $('.dyn-input').val()
             submitChange(editedText, tmpElement)
             $('.dyn-input').parent().replaceWith(tmpElement)
-            console.log("enter replaced")
             $(tmpElement).text(editedText)
             blockEditing = false
         }else if(e.keyCode == 13){
             $('.dyn-input').parent().replaceWith(tmpElement)
-            console.log("empty replaced")
             blockEditing = false
         }
     })
